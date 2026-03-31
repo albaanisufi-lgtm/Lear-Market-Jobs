@@ -128,10 +128,10 @@ export default function ApplicationForm() {
       }));
       return;
     }
-    if (file.size > 2 * 1024 * 1024) {
+    if (file.size > 10 * 1024 * 1024) {
       setErrors((prev) => ({
         ...prev,
-        profile_image: 'Image must be smaller than 2MB.',
+        profile_image: 'Image must be smaller than 10MB.',
       }));
       return;
     }
