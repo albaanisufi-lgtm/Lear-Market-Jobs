@@ -230,6 +230,8 @@ export default function ApplicationModal({
               Dokumentet
             </h4>
             <div className="flex flex-wrap gap-2 mb-3">
+              {application.cv_file_url ? (
+              <>
               <a
                 href={application.cv_file_url}
                 target="_blank"
@@ -267,8 +269,12 @@ export default function ApplicationModal({
                   </>
                 )}
               </button>
+              </>
+              ) : (
+                <p className="text-sm text-gray-400 italic">Nuk u ngarkua CV.</p>
+              )}
             </div>
-            {showCvPreview && (
+            {showCvPreview && application.cv_file_url && (
               <div className="rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
                 <iframe
                   src={application.cv_file_url}
