@@ -505,7 +505,7 @@ export default function ApplicationForm() {
       {/* ── Location Picker ── */}
       <section>
         <h2 className="text-xl font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-200">
-          Zgjidhni Markun
+          Zgjidhni Marketin
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {LOCATIONS.map((loc) => (
