@@ -28,7 +28,7 @@ export interface JobApplication {
   cover_letter: string | null;
   availability: string | null;
   profile_image_url: string;
-  cv_file_url: string;
+  cv_file_url: string | null;
   status: ApplicationStatus;
   label: ApplicationLabel | null;
   admin_notes: string | null;

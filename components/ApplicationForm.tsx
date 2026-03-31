@@ -222,11 +222,6 @@ export default function ApplicationForm() {
       valid = false;
     }
 
-    if (!cvFile) {
-      newErrors.cv_file = 'CV / Rezymeja është e detyrueshme.';
-      valid = false;
-    }
-
     setErrors(newErrors);
     return valid;
   };
@@ -269,16 +264,19 @@ export default function ApplicationForm() {
         .from('profile-images')
         .getPublicUrl(profilePath);
 
-      // Upload CV
-      const cvPath = `${uid}-cv.pdf`;
-      const { error: cvErr } = await supabase.storage
-        .from('cv-files')
-        .upload(cvPath, cvFile!);
-      if (cvErr) throw new Error('Ngarkimi i CV-së dështoi. Ju lutem provoni përsëri.');
-
-      const { data: cvUrlData } = supabase.storage
-        .from('cv-files')
-        .getPublicUrl(cvPath);
+      // Upload CV (optional)
+      let cvFileUrl: string | null = null;
+      if (cvFile) {
+        const cvPath = `${uid}-cv.pdf`;
+        const { error: cvErr } = await supabase.storage
+          .from('cv-files')
+          .upload(cvPath, cvFile);
+        if (cvErr) throw new Error('Ngarkimi i CV-së dështoi. Ju lutem provoni përsëri.');
+        const { data: cvUrlData } = supabase.storage
+          .from('cv-files')
+          .getPublicUrl(cvPath);
+        cvFileUrl = cvUrlData.publicUrl;
+      }
 
       // Get reCAPTCHA token (optional — gracefully skipped if not configured)
       const recaptchaToken = await getRecaptchaToken();
@@ -299,7 +297,7 @@ export default function ApplicationForm() {
           cover_letter: formData.cover_letter.trim() || null,
           availability: formData.availability || null,
           profile_image_url: profileUrlData.publicUrl,
-          cv_file_url: cvUrlData.publicUrl,
+          cv_file_url: cvFileUrl,
           recaptchaToken,
         }),
       });
@@ -675,7 +673,7 @@ export default function ApplicationForm() {
           {/* CV Upload */}
           <div>
             <p className="block text-sm font-medium text-gray-700 mb-1.5">
-              CV / Rezymeja <span className="text-red-500">*</span>
+              CV / Rezymeja <span className="text-gray-400 font-normal text-xs">(opsionale)</span>
             </p>
             <div
               onClick={() => cvInputRef.current?.click()}
@@ -771,7 +769,7 @@ export default function ApplicationForm() {
               htmlFor="cover_letter"
               className="block text-sm font-medium text-gray-700 mb-1.5"
             >
-              Letër Motivuese
+              Letër Motivuese <span className="text-gray-400 font-normal text-xs">(opsionale)</span>
             </label>
             <textarea
               id="cover_letter"

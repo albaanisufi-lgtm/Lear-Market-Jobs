@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     cover_letter: string | null;
     availability: string | null;
     profile_image_url: string;
-    cv_file_url: string;
+    cv_file_url: string | null;
   };
 
   // ── reCAPTCHA ─────────────────────────────────────────────────────────────
@@ -87,8 +87,7 @@ export async function POST(req: NextRequest) {
     !applicationData.email?.trim() ||
     !applicationData.date_of_birth ||
     !applicationData.position?.trim() ||
-    !applicationData.profile_image_url ||
-    !applicationData.cv_file_url
+    !applicationData.profile_image_url
   ) {
     return NextResponse.json(
       { error: 'Të dhënat e detyrueshme mungojnë.' },
