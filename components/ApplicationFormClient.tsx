@@ -20,10 +20,14 @@ const ApplicationForm = nextDynamic(() => import('./ApplicationForm'), {
   loading: LoadingSpinner,
 });
 
-export default function ApplicationFormClient() {
+interface Props {
+  positionsByLocation: Record<string, string[]>;
+}
+
+export default function ApplicationFormClient({ positionsByLocation }: Props) {
   return (
     <Suspense fallback={<LoadingSpinner />}>
-      <ApplicationForm />
+      <ApplicationForm positionsByLocation={positionsByLocation} />
     </Suspense>
   );
 }

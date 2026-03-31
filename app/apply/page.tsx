@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import ApplicationFormClient from '@/components/ApplicationFormClient';
+import { createClient } from '@/lib/supabase/server';
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: 'Apliko për Punë | LEAR MARKET',
@@ -8,7 +11,18 @@ export const metadata: Metadata = {
     'Dërgoni aplikimin tuaj për punë në LEAR MARKET. Jemi duke punësuar — plotësoni formularin më poshtë.',
 };
 
-export default function ApplyPage() {
+export default async function ApplyPage() {
+  const supabase = await createClient();
+  const { data: rows } = await supabase
+    .from('job_positions')
+    .select('title, location')
+    .order('title');
+
+  const positionsByLocation: Record<string, string[]> = {};
+  for (const row of rows ?? []) {
+    if (!positionsByLocation[row.location]) positionsByLocation[row.location] = [];
+    positionsByLocation[row.location].push(row.title);
+  }
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Top Navigation */}
@@ -49,7 +63,7 @@ export default function ApplyPage() {
       {/* Form Card */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 pb-16">
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-10">
-          <ApplicationFormClient />
+          <ApplicationFormClient positionsByLocation={positionsByLocation} />
         </div>
       </main>
 

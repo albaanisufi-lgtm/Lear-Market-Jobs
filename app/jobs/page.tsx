@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import { LOCATIONS, MarketLocation } from '@/lib/types';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // ISR: rebuild at most every 60 seconds
 
 interface Position {
   id: string;

@@ -2,7 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 import { MarketLocation, LOCATIONS } from '@/lib/types';
 
 declare global {
@@ -52,7 +51,7 @@ const INITIAL_FORM: FormData = {
   availability: '',
 };
 
-export default function ApplicationForm() {
+export default function ApplicationForm({ positionsByLocation }: { positionsByLocation: Record<string, string[]> }) {
   const searchParams = useSearchParams();
   const preselectedPosition = searchParams.get('position') ?? '';
   const preselectedLocation = (searchParams.get('location') as MarketLocation) ?? 'LEAR MARKET 1';
@@ -62,8 +61,10 @@ export default function ApplicationForm() {
     location: preselectedLocation,
     position: preselectedPosition,
   });
-  const [positions, setPositions] = useState<string[]>([]);
-  const [positionsLoading, setPositionsLoading] = useState(true);
+  const [positions, setPositions] = useState<string[]>(
+    positionsByLocation[preselectedLocation] ?? []
+  );
+  const [positionsLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [profilePreview, setProfilePreview] = useState<string | null>(null);
@@ -87,18 +88,8 @@ export default function ApplicationForm() {
   }, []);
 
   useEffect(() => {
-    const supabaseClient = createClient();
-    setPositionsLoading(true);
-    supabaseClient
-      .from('job_positions')
-      .select('title')
-      .eq('location', formData.location)
-      .order('title')
-      .then(({ data }) => {
-        if (data) setPositions(data.map((p: { title: string }) => p.title));
-        setPositionsLoading(false);
-      });
-  }, [formData.location]);
+    setPositions(positionsByLocation[formData.location] ?? []);
+  }, [formData.location, positionsByLocation]);
 
   // If positions loaded and preselected position exists in list, keep it; otherwise clear
   useEffect(() => {
