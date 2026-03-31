@@ -20,6 +20,7 @@ export interface JobApplication {
   full_name: string;
   phone: string;
   email: string;
+  date_of_birth: string | null;
   city: string | null;
   position: string;
   location: MarketLocation;

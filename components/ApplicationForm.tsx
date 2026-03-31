@@ -20,6 +20,7 @@ interface FormData {
   full_name: string;
   phone: string;
   email: string;
+  date_of_birth: string;
   city: string;
   position: string;
   location: MarketLocation;
@@ -32,6 +33,7 @@ interface FormErrors {
   full_name?: string;
   phone?: string;
   email?: string;
+  date_of_birth?: string;
   position?: string;
   profile_image?: string;
   cv_file?: string;
@@ -41,6 +43,7 @@ const INITIAL_FORM: FormData = {
   full_name: '',
   phone: '',
   email: '',
+  date_of_birth: '',
   city: '',
   position: '',
   location: 'LEAR MARKET 1',
@@ -195,6 +198,20 @@ export default function ApplicationForm() {
       valid = false;
     }
 
+    if (!formData.date_of_birth) {
+      newErrors.date_of_birth = 'Data e lindjes është e detyrueshme.';
+      valid = false;
+    } else {
+      const dob = new Date(formData.date_of_birth);
+      const today = new Date();
+      const age = today.getFullYear() - dob.getFullYear() -
+        (today < new Date(today.getFullYear(), dob.getMonth(), dob.getDate()) ? 1 : 0);
+      if (age < 16 || age > 80) {
+        newErrors.date_of_birth = 'Mosha duhet të jetë ndërmjet 16 dhe 80 vjeç.';
+        valid = false;
+      }
+    }
+
     if (!formData.position) {
       newErrors.position = 'Ju lutem zgjidhni një pozicion.';
       valid = false;
@@ -274,6 +291,7 @@ export default function ApplicationForm() {
           full_name: formData.full_name.trim(),
           phone: formData.phone.trim(),
           email: formData.email.trim().toLowerCase(),
+          date_of_birth: formData.date_of_birth,
           city: formData.city.trim() || null,
           position: formData.position,
           location: formData.location,
@@ -435,6 +453,33 @@ export default function ApplicationForm() {
             />
             {errors.email && (
               <p className="mt-1.5 text-sm text-red-600">{errors.email}</p>
+            )}
+          </div>
+
+          {/* Date of Birth */}
+          <div>
+            <label
+              htmlFor="date_of_birth"
+              className="block text-sm font-medium text-gray-700 mb-1.5"
+            >
+              Data e Lindjes <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="date_of_birth"
+              name="date_of_birth"
+              type="date"
+              value={formData.date_of_birth}
+              onChange={handleChange}
+              max={new Date(new Date().setFullYear(new Date().getFullYear() - 16)).toISOString().split('T')[0]}
+              min={new Date(new Date().setFullYear(new Date().getFullYear() - 80)).toISOString().split('T')[0]}
+              className={`w-full px-4 py-3 rounded-lg border text-sm transition focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                errors.date_of_birth
+                  ? 'border-red-400 bg-red-50'
+                  : 'border-gray-300'
+              }`}
+            />
+            {errors.date_of_birth && (
+              <p className="mt-1.5 text-sm text-red-600">{errors.date_of_birth}</p>
             )}
           </div>
 

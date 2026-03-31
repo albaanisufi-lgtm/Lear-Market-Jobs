@@ -26,6 +26,10 @@ ALTER TABLE public.job_applications
   ADD COLUMN IF NOT EXISTS label TEXT DEFAULT NULL
   CHECK (label IS NULL OR label IN ('Prioritet i Lartë', 'Kandidat i Mundshëm', 'Në Pritje të Dokumenteve', 'Shënuar'));
 
+-- Add date_of_birth column to job_applications
+ALTER TABLE public.job_applications
+  ADD COLUMN IF NOT EXISTS date_of_birth DATE DEFAULT NULL;
+
 -- ============================================================
 -- NEW TABLES (run these if you already have the base schema)
 -- ============================================================

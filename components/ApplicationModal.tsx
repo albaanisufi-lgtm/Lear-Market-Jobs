@@ -178,6 +178,7 @@ export default function ApplicationModal({
             {[
               { label: 'Email', value: application.email },
               { label: 'Telefon', value: application.phone },
+              { label: 'Datëlindje', value: application.date_of_birth ? new Date(application.date_of_birth).toLocaleDateString('sq-AL', { day: '2-digit', month: 'long', year: 'numeric' }) : '—' },
               { label: 'Lokacioni', value: application.location ?? '—' },
               { label: 'Qyteti', value: application.city ?? '—' },
               {

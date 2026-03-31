@@ -60,6 +60,7 @@ export async function POST(req: NextRequest) {
     full_name: string;
     phone: string;
     email: string;
+    date_of_birth: string;
     city: string | null;
     position: string;
     location: string;
@@ -84,6 +85,7 @@ export async function POST(req: NextRequest) {
     !applicationData.full_name?.trim() ||
     !applicationData.phone?.trim() ||
     !applicationData.email?.trim() ||
+    !applicationData.date_of_birth ||
     !applicationData.position?.trim() ||
     !applicationData.profile_image_url ||
     !applicationData.cv_file_url
